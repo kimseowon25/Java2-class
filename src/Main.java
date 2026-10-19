@@ -1,47 +1,86 @@
-// 1. 상영관 이름 배열
-String[] screenTypes = {"일반 2D", "입체 3D", "IMAX", "4DX"};
-//2. 기본 티켓 가격 배역
-int[] basePrices = {14000, 16000, 22000, 20000};
+import java.util.*;
 
-// 3. 예외처리
+String[] menuName = {"아메리카노", "카페라떼", "바닐라라뗴"};
+int[] menuPrice = {3000, 4000, 5000};
+
 final int ERROR = -9;
-String ERROR001 = "잘못된 상영관 선택입니다.";
-String ERROR002 = "잘못된 가격 선택입니다.";
+final String ERROR001 = "ERROR001 : 잘못된 메뉴번호를 입력하셨습니다. 다시 입력해주세요";
+final String ERROR002 = "ERROR002 : 잘못된 사이즈번호를 입력하셨습니다. 다시 입력해주세요.";
 
-int getPrice ( int selectedType)
+int getPrice(int menu)
 {
-    return basePrices[selectedType];
+    if(menu <= -1 || menu >= menuPrice.length)
+        return ERROR;
+
+    return menuPrice[menu];
+
 }
-
-int getTimeOptionName ( int timeCode)
+int getSizePrice(int size)
 {
-    return 0;
-}
+    if(size < 0 | size >= 4)
+        return ERROR;
 
-int getTimeOptionPrice(int timeCode)
-{
-    switch (timeCode)
+    switch(size)
     {
-        case 1 :
-            return -3000; // 조조할인
-        case 2 :
-            return 2000; // 프라임타임/주말 피크
-        case 3 :
-            return -2000; // 심야 할인
-        case 4 :
-            return 0; // 일반 시간대
-        default:
-            return 0; // 그 외
+        case 1:
+            return 0; //톨
+        case 2:
+            return 500; //그란데
+        case 3:
+            return 1000; //벤티
+        default :
+            return ERROR;
     }
 }
 
+int calculateTotal(int price, int sizePrice, int quantity)
+{
+    return (price + sizePrice) * quantity;
+}
 
+void printReceipt(int menuChoice, int menuSize, int quantity, int total)
+{
+    String sizeName = "";
+    switch(menuSize)
+    {
+        case 1:
+            sizeName = "톨";
+            break;
+        case 2:
+            sizeName = "그란데";
+            break;
+        case 3:
+            sizeName = "벤티";
+            break;
+        default :
+            System.out.println(ERROR002);
+    }
 
+    System.out.println("메뉴 : " + menuName[menuChoice]);
+    System.out.println("크기 : " + sizeName);
+    System.out.println("수량 : " + quantity);
+    System.out.println("결제금액 : " + total);
 
-void main() {
-    // 4. switch문을 사용해서 추가 요금을 반환하기
+}
+void main()
+{
+    int menuChoice = 0; // 아메리카노
+    int menuSize = 2; // 1: 톨/ | 2: 그란데/ | 3: 벤티
+    int quantity = 2;
 
-    // 5. 영수증 출력
-    int timeCode = 1;
-    int count = 2;
+    int choicePrice = getPrice(menuChoice);
+    if (choicePrice == ERROR)
+    {
+        System.out.println(ERROR001);
+        return;
+    }
+    int sizePrice = getSizePrice(menuSize);
+    if(sizePrice == ERROR)
+    {
+        System.out.println(ERROR002);
+        return;
+    }
+
+    int totalPrice = calculateTotal(choicePrice, sizePrice, quantity);
+    printReceipt(menuChoice, menuSize, quantity, totalPrice);
 }
